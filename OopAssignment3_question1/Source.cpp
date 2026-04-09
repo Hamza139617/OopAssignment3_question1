@@ -1,5 +1,6 @@
 #include <iostream>
-#include "Header.h"
+#include "Part2.h"
+#include "part3.h"
 using namespace std;
 
 
