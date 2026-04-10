@@ -90,6 +90,18 @@ public:
 	bool isAlive() const { return alive; }
 
 
+	// setters
+
+	void setHeight(int x) {
+		this->x = x; 
+		return;
+	}
+
+	void setWidth(int y) {
+		this->y = y;
+		return;
+	}
+
 
 	virtual void update(Tile** word, int worldWidth, int worldHeight);
 
@@ -263,6 +275,40 @@ public:
 		this->specie = true;
 	}
 
+
+	void move(int targetX, int targetY) {
+
+		if (targetX < x) x--;
+		else if (targetX > x) x++;
+
+		if (targetY > y) y++;
+		else if (targetY < y) y--;
+
+	}
+
+	void eat(Tile** world) {
+
+		for (int i = x; i < x + width; i++) {
+
+			for (int j = y; j < y + height; j++) {
+
+
+				if (world[i][j].occupant->getSpecie() == false) {
+					world[i][j].nutrientLevel--;
+					int newX = world[i][j].occupant->getWidth();
+					int newY = world[i][j].occupant->getHeight();
+					newX--;
+					newY--;
+
+					world[i][j].occupant->setWidth(newX);
+					world[i][j].occupant->setHeight(newY);
+				}
+
+			}
+
+		}
+
+	}
 	
 	void update(Tile** world, int worldWidth, int worldHeight) {
 
@@ -274,7 +320,32 @@ public:
 
 		// search  
 
+		int startX = x - 2;
+		int startY = y - 2;
 
+		int endX = x + width + 2;
+		int endY = y + height + 2;
+
+		if (startX < 0) startX = 0;
+		if (startY < 0) startY = 0;
+
+		if (endX > worldWidth) endX = worldWidth;
+		if (endY > worldHeight) endY = worldHeight;
+
+		for (int i = startX; i < endX; i++) {
+
+			for (int j = startY; j < endY; j++) {
+				
+				if (world[i][j].occupant->getSpecie() == false) {
+					move(i, j);
+					break;
+				}
+
+			}
+
+		}
+
+		eat(world);
 
 	}
 
