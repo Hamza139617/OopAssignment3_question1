@@ -10,7 +10,7 @@ protected:
 	int x, y, width, height;
 	bool** internalShape = nullptr ;
 	bool specie = false; // type of the organism initially false meaning fractalSprawler and true meaning kineticHunter 
-	int maxSize = 5;
+	
 	
 	float getAverageNutrients(Tile** world) {
 
@@ -21,10 +21,10 @@ public:
 
 		
 
-		internalShape = new bool* [maxSize];	// when the organism is created the internalShape initially should be 2x2
+		internalShape = new bool* [width];	// when the organism is created the internalShape initially should be 2x2
 
-		for (int i = 0; i < maxSize; i++) {
-			internalShape[i] = new bool[maxSize];
+		for (int i = 0; i < width; i++) {
+			internalShape[i] = new bool[height];
 		}
 
 		for (int i = 0; i < width; i++) {
@@ -43,10 +43,10 @@ public:
 
 		
 
-		internalShape = new bool* [maxSize];	
+		internalShape = new bool* [width];	
 
-		for (int i = 0; i < maxSize; i++) {
-			internalShape[i] = new bool[maxSize];
+		for (int i = 0; i < width; i++) {
+			internalShape[i] = new bool[height];
 		}
 
 		for (int i = 0; i < width; i++) {
@@ -61,11 +61,22 @@ public:
 
 	}
 
+
+	// getters 
+
+	int getX() const { return x; }
+	int getY() const { return y; }
+	int getWidth() const { return width; }
+	int getHeight() const { return height; }
+
+
+
+
 	virtual void update(Tile** word, int worldWidth, int worldHeight);
 
 	~Organism() {
 
-		for (int i = 0; i < maxSize; i++) {
+		for (int i = 0; i < width; i++) {
 			delete[] internalShape[i];
 		}
 
