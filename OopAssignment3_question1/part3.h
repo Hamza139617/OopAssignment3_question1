@@ -10,7 +10,7 @@ protected:
 	int x, y, width, height;
 	bool** internalShape = nullptr ;
 	bool specie = false; // type of the organism initially false meaning fractalSprawler and true meaning kineticHunter 
-	
+	bool alive = false;
 	
 	float getAverageNutrients(Tile** world) {
 
@@ -19,7 +19,7 @@ protected:
 public:
 	Organism(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {
 
-		
+		alive = true;
 
 		internalShape = new bool* [width];	// when the organism is created the internalShape initially should be 2x2
 
@@ -41,7 +41,7 @@ public:
 
 	Organism() : x(0), y(0), width(0), height(0) {
 
-		
+		alive = true;
 
 		internalShape = new bool* [width];	
 
@@ -68,7 +68,8 @@ public:
 	int getY() const { return y; }
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
-
+	bool getSpecie() const { return specie; }
+	bool isAlive() const { return alive; }
 
 
 
