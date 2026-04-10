@@ -8,12 +8,7 @@ struct Tile
 	float nutrientLevel;
 	float toxicity;
 	Organism* occupant;
-	Tile()
-	{
-		occupant = nullptr;
-		nutrientLevel = 0;
-		toxicity = 0;
-	}
+	Tile();
 	Tile(float n, float t, Organism* o) :nutrientLevel(n), toxicity(t), occupant(o) {}
 	float getNutrientLevel() const { return nutrientLevel; }
 	float getToxicity()const { return toxicity; }

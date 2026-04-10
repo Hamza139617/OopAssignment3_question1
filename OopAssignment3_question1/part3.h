@@ -223,6 +223,7 @@ public:
 					if (i + 1 < worldWidth && hitEdge != true ) i++;
 					else if ( !hitEdge ){
 						hitEdge = true;
+						hitEdge = true;
 						i--;
 					}
 					else if( i >= 0 && hitEdge ){

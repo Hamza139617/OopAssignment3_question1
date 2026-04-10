@@ -1,7 +1,19 @@
 #include"Part2.h"
 #include"part3.h"
 
+// Ansi escape sequences 
+const char* GREEN = "\033[32m";
+const char* RED = "\033[31m";
+const char* BLACK = "\033[30m";
+const char* RESET = "\033[0m";
+const char* SQUARE = "#"; // instead of the actual square we will be using the hashtag
 
+Tile::Tile()
+{
+	occupant = nullptr;
+	nutrientLevel = 0;
+	toxicity = 0;
+}
 void World::addNewOrg(Organism* org)
 {
 	if (orgCap == orgCount) //if capacity gets full
@@ -63,17 +75,16 @@ void World::display()
 		for (int j = 0; j < width; j++)
 		{
 			if (tiles[i][j].occupant == nullptr)
-				std::cout << "\033[40m#\033[0m";  // black for empty
+			{
+				std::cout << BLACK << "#" << RESET;  // black for empty
+			}
+			else if (tiles[i][j].occupant->getSpecie())
+			{
+				std::cout << RED<<"#"<<RESET;  // red for kinetic hunter
+			}
 			else
 			{
-				if (tiles[i][j].occupant->getSpecie())
-				{
-					std::cout << "\033[31m#\033[0m";  // red for kinetic hunter
-				}
-				else
-				{
-					std::cout << "\033[32m#\033[0m";  // green for fractal spawner
-				}
+				std::cout << GREEN<<"#"<<RESET;  // green for fractal spawner
 			}
 		}
 		std::cout << std::endl;
