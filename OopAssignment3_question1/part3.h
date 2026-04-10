@@ -269,7 +269,7 @@ public:
 			width--;
 			height--;
 
-			if (width <= 0 && height <= 0) {
+			if (width <= 0 || height <= 0) {
 				alive = false;
 				world[x][y].occupant = nullptr;
 				return;
@@ -306,13 +306,20 @@ public:
 	}
 
 
-	void move(int targetX, int targetY) {
+	void move(int targetX, int targetY, Tile** world) {
+
+		int initialX = x;
+		int initialY = y;
+
+
 
 		if (targetX < x) x--;
 		else if (targetX > x) x++;
 
 		if (targetY > y) y++;
 		else if (targetY < y) y--;
+
+		
 
 	}
 
@@ -372,7 +379,7 @@ public:
 			for (int j = startY; j < endY; j++) {
 				
 				if ( world[i][j].occupant != nullptr &&  world[i][j].occupant->getSpecie() == false) {
-					move(i, j);
+					move(i, j, world);
 					found = true;
 					break;
 				}
