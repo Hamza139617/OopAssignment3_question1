@@ -1,30 +1,21 @@
-#include <iostream>
 #include "Part2.h"
 #include "part3.h"
+
 using namespace std;
 
-
-// Ansi escape sequences 
-const char* GREEN = "\033[32m";
-const char* RED = "\033[31m";
-const char* BLACK = "\033[30m";
-const char* RESET = "\033[0m";
-const char* SQUARE = "#"; // instead of the actual square we will be using the hashtag
-
-
 int main() {
+	World world(20, 20); //initiating a world grid 20x20
 
-	 
+	//adding 2 orgs 
+	world.addNewOrg(new FractalSprawler(2, 2, 3, 3));
+	world.addNewOrg(new KineticHunter(10, 10, 3, 3));
 
-	cout << GREEN << "Hello Usama bhai " << endl << SQUARE << endl << RED << "Hello Usama bhai the above is the ansi escape sequences learn through ai what it is" << RESET;
-	cout << "Here's my code";
-	cout << "Here is another line i am adding";
-	return 0; //this is also mine
-
-
-
-
-
-
-	
+	//running as long as fractals are alive
+	for (int i = 0; world.getFractalCount() > 0; i++)
+	{
+		cout << "// ===== Iteration " << i + 1 << " ===== //";
+		cout << endl;
+		world.runIteration();
+	}
+	return 0;	
 }
