@@ -1,20 +1,20 @@
 #pragma once
 #include<iostream>
 #include<ctime>
-class Organism;
-// Ansi escape sequences 
-const char* GREEN = "\033[32m";
-const char* RED = "\033[31m";
-const char* BLACK = "\033[30m";
-const char* RESET = "\033[0m";
-const char* SQUARE = "#"; // instead of the actual square we will be using the hashtag
 
+class Organism;
 struct Tile
 {
 	float nutrientLevel;
 	float toxicity;
 	Organism* occupant;
-
+	Tile()
+	{
+		occupant = nullptr;
+		nutrientLevel = 0;
+		toxicity = 0;
+	}
+	Tile(float n, float t, Organism* o) :nutrientLevel(n), toxicity(t), occupant(o) {}
 	float getNutrientLevel() const { return nutrientLevel; }
 	float getToxicity()const { return toxicity; }
 };
@@ -47,90 +47,12 @@ public:
 		}
 	}
 
-	void addNewOrg(Organism* org)
-	{
-		if (orgCap == orgCount) //if capacity gets full
-		{
-			orgCap *= 2;
-			Organism** temp = new Organism * [orgCap];
-			for (int i = 0; i < orgCount; i++)
-			{
-				temp[i] = orgs[i];
-			}
-			delete[]  orgs;
-			orgs = temp;
-		}
+	void addNewOrg(Organism* org);
+	void removeDead(); //for removing dead organisms before next iteration
+	int getFractalCount();
+	void runIteration();
+	void display();
 
-		orgs[orgCount] = org;
-		orgCount++;
-	}
-	void removeDead() //for removing dead organisms before next iteration
-	{
-		int count = 0;
-		for (int i = 0; i < orgCount; i++)
-		{
-			if (orgs[i]->isAlive())
-				orgs[count++] = orgs[i];
-			else
-				delete orgs[i];
-		}
-		orgCount = count;
-	}
-	int getFractalCount()
-	{
-		int c=0;
-		for (int i = 0; i < orgCount; i++)
-		{
-			if (orgs[i]->getSpecie() && orgs[i]->isAlive())
-			{
-				c++;
-			}
-		}
-		return c;
-	}
-	void display()
-	{
-		for (int i = 0; i < height; i++)
-		{
-			for (int j = 0; j < width; j++)
-			{
-				if (tiles[i][j].occupant == nullptr)
-					std::cout << "\033[40m#\033[0m";  // black for empty
-				else
-				{
-					if (tiles[i][j].occupant->getSpecie())
-					{
-						std::cout << "\033[31m#\033[0m";  // red for kinetic hunter
-					}
-					else
-					{
-						std::cout << "\033[32m#\033[0m";  // green for fractal spawner
-					}
-				}
-			}
-			std::cout << std::endl;
-		}
-		std::cout << "Total Population: " << orgCount;
-		std::cout << std::endl;
-		float sum = 0;
-		for (int i = 0; i < height; i++)
-		{
-			for (int j = 0; j < width; j++)
-			{
-				sum += tiles[i][j].getToxicity(); 
-			}
-		}
-		std::cout << "Average World Toxicity: " << sum / (height*width);	// print average toxicity
-	}
-	void runIteration()
-	{
-		for (int i = 0; i < orgCount; i++)
-		{
-			orgs[i]->update(tiles, width, height);
-		}
-		removeDead();
-		display();
-	}
 
 	//getters
 	int getOrgCount()const { return orgCount; }
