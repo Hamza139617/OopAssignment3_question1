@@ -57,7 +57,7 @@ public:
 
 	}
 
-	Organism() : x(0), y(0), width(0), height(0) {
+	Organism() : x(0), y(0), width(2), height(2) {
 
 		alive = true;
 
@@ -92,13 +92,13 @@ public:
 
 	// setters
 
-	void setHeight(int x) {
-		this->x = x; 
+	void setWidth(int x) {
+		this->width = x; 
 		return;
 	}
 
-	void setWidth(int y) {
-		this->y = y;
+	void setHeight(int y) {
+		this->height = y;
 		return;
 	}
 
@@ -131,17 +131,22 @@ public:
 
 	void update(Tile** world, int worldWidth, int worldHeight) {
 
+		int radiusX = 2 * width;
+		int radiusY = 2 * height;
+
+
+
 		int centerX = (x + width) / 2;
 		int centerY = (y + height) / 2;
 
-		int startX = centerX - 1;
-		int startY = centerY - 1;
+		int startX = centerX - radiusX;
+		int endX = centerX + radiusX;
 
-		int endX = centerX + 1;
-		int endY = centerY + 1;
+		int startY = centerY - radiusY;
+		int endY = centerY + radiusY;
 
-		if (startX < worldWidth) startX = 0;
-		if (startY < worldHeight) startY = 0;
+		if (startX < 0) startX = 0;
+		if (startY < 0) startY = 0;
 
 		if (endX > worldWidth) endX = worldWidth - 1;
 		if (endY > worldHeight) endY = worldHeight - 1;
@@ -227,6 +232,29 @@ public:
 
 				}
 
+
+				for (int i = 0; i < width; i++)
+					delete[] internalShape[i];
+
+				delete[] internalShape;
+
+				width = 2;
+				height = 2;
+
+				internalShape = new bool* [width];
+
+				for (int i = 0; i < width; i++)
+					internalShape[i] = new bool[height];
+
+
+				for (int i = 0; i < width; i++) {
+
+
+					for (int j = 0; j < height; j++) {
+						internalShape[i][j] = true;
+					}
+				}
+
 			}
 
 		}
@@ -243,6 +271,7 @@ public:
 			if (width <= 0 && height <= 0) {
 				alive = false;
 				world[x][y].occupant = nullptr;
+				return;
 			}
 
 			internalShape = new bool* [width];
@@ -293,7 +322,7 @@ public:
 			for (int j = y; j < y + height; j++) {
 
 
-				if (world[i][j].occupant->getSpecie() == false) {
+				if (world[i][j].occupant != nullptr && world[i][j].occupant->getSpecie() == false ) {
 					world[i][j].nutrientLevel--;
 					int newX = world[i][j].occupant->getWidth();
 					int newY = world[i][j].occupant->getHeight();
@@ -319,15 +348,20 @@ public:
 		//
 
 		// search  
+		bool found = false;
+		int radiusX = 4 * width;
+		int radiusY = 4 * height;
 
-		int startX = x - 2;
-		int startY = y - 2;
+		int startX = x - radiusX;
+		int startY = y - radiusY;
 
-		int endX = x + width + 2;
-		int endY = y + height + 2;
+		int endX = x + radiusX;
+		int endY = y + radiusY;
 
 		if (startX < 0) startX = 0;
 		if (startY < 0) startY = 0;
+
+
 
 		if (endX > worldWidth) endX = worldWidth;
 		if (endY > worldHeight) endY = worldHeight;
@@ -336,13 +370,15 @@ public:
 
 			for (int j = startY; j < endY; j++) {
 				
-				if (world[i][j].occupant->getSpecie() == false) {
+				if ( world[i][j].occupant != nullptr &&  world[i][j].occupant->getSpecie() == false) {
 					move(i, j);
+					found = true;
 					break;
 				}
 
 			}
 
+			if (found) break;
 		}
 
 		eat(world);
