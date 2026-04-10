@@ -1,7 +1,8 @@
 #pragma once
 
+#include "Part2.h"
 
-class Tile;
+
 
 
 class Organism {
@@ -13,6 +14,21 @@ protected:
 	bool alive = false;
 	
 	float getAverageNutrients(Tile** world) {
+
+		int numTile = width * height; // total number of tiles covered by the organismm
+		float sumOfNutrient = 0;
+
+		for (int i = 0; i < width; i++) {
+
+			for (int j = 0; j < height; j++) {
+
+				sumOfNutrient += world[x + i][y + j].nutrientLevel;
+
+			}
+
+		}
+
+		return sumOfNutrient / numTile;
 
 	}
 
