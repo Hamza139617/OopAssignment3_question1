@@ -214,7 +214,7 @@ public:
 
 						if (world[i][j].occupant == nullptr && (i + 2 < worldWidth && j + 2 < worldHeight ) ) {
 							
-							FractalSprawler* newConsumer = new FractalSprawler(i, y, 2, 2);
+							FractalSprawler* newConsumer = new FractalSprawler(i, j, 2, 2);
 							world[i][j].occupant = newConsumer;
 						}
 
@@ -261,6 +261,12 @@ public:
 		}
 		else if (averageNutrient < 30) {
 
+			int oldW = width;
+			int oldH = height;
+
+			
+
+
 			for (int i = 0; i < width; i++)
 				delete[] internalShape[i];
 
@@ -271,7 +277,15 @@ public:
 
 			if (width <= 0 || height <= 0) {
 				alive = false;
-				world[x][y].occupant = nullptr;
+
+				for (int i = x; i < x + oldW; i++) {
+					for (int j = y; j < y + oldH; j++) {
+						if (i >= 0 && j >= 0 && i < worldWidth && j < worldHeight && world[i][j].occupant == this) {
+							world[i][j].occupant = nullptr;
+						}
+					}
+				}
+
 				return;
 			}
 
@@ -306,21 +320,40 @@ public:
 	}
 
 
-	void move(int targetX, int targetY, Tile** world) {
+	void move(int targetX, int targetY, Tile** world, int worldWidth, int worldHeight ) {
 
-		int initialX = x;
-		int initialY = y;
+		int oldX = x, oldY = y;
 
+		int nextX = x;
+		int nextY = y;
 
+		if (targetX < x) nextX--;
+		else if (targetX > x) nextX++;
 
-		if (targetX < x) x--;
-		else if (targetX > x) x++;
+		if (targetY > y) nextY++;
+		else if (targetY < y) nextY--;
 
-		if (targetY > y) y++;
-		else if (targetY < y) y--;
+		if (nextX < 0 || nextY < 0 || nextX + width > worldWidth || nextY + height > worldHeight) {
+			return;
+		}
 
+		for (int i = oldX; i < oldX + width; i++) {
+			
+			for (int j = oldY; j < oldY + height; j++) {
+				if (world[i][j].occupant == this) world[i][j].occupant = nullptr;
+			}
+
+		}
+
+		x = nextX;
+		y = nextY;
+
+		for (int i = x; i < x + width; i++) {
+			for (int j = y; j < y + height; j++) {
+				world[i][j].occupant = this;
+			}
+		}
 		
-
 	}
 
 	void eat(Tile** world) {
@@ -379,7 +412,7 @@ public:
 			for (int j = startY; j < endY; j++) {
 				
 				if ( world[i][j].occupant != nullptr &&  world[i][j].occupant->getSpecie() == false) {
-					move(i, j, world);
+					move(i, j, world, worldWidth, worldHeight );
 					found = true;
 					break;
 				}

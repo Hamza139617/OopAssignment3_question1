@@ -16,20 +16,43 @@ Tile::Tile()
 }
 void World::addNewOrg(Organism* org)
 {
-	if (orgCap == orgCount) //if capacity gets full
-	{
+	
+	if (orgCap == orgCount) {
 		orgCap *= 2;
 		Organism** temp = new Organism * [orgCap];
-		for (int i = 0; i < orgCount; i++)
-		{
-			temp[i] = orgs[i];
-		}
-		delete[]  orgs;
+
+		for (int i = 0; i < orgCount; i++) temp[i] = orgs[i];
+		delete[] orgs;
 		orgs = temp;
+
 	}
 
-	orgs[orgCount] = org;
-	orgCount++;
+	int ox = org->getX();
+	int oy = org->getY();
+	int ow = org->getWidth();
+	int oh = org->getHeight();
+
+	if (ox < 0 || oy < 0 || ox + ow > height || oy + oh > width) {
+		delete org;
+		return;
+	}
+
+	for (int i = ox; i < ox + ow; i++) {
+		for (int j = oy; j < oy + oh; j++) {
+			if (tiles[i][j].occupant != nullptr) {
+				delete org;
+				return;
+			}
+		}
+	}
+
+	for (int i = ox; i < ox + ow; i++) {
+		for (int j = oy; j < oy + oh; j++) {
+			tiles[i][j].occupant = org;
+		}
+	}
+
+	orgs[orgCount++] = org;
 }
 
 void World::removeDead() //for removing dead organisms before next iteration
@@ -50,7 +73,7 @@ int World::getFractalCount()
 	int c=0;
 	for (int i = 0; i < orgCount; i++)
 	{
-		if (orgs[i]->getSpecie() && orgs[i]->isAlive())
+		if (!orgs[i]->getSpecie() && orgs[i]->isAlive())
 		{
 			c++;
 		}
@@ -60,10 +83,44 @@ int World::getFractalCount()
 
 void World::runIteration()
 {
-	for (int i = 0; i < orgCount; i++)
-	{
-		orgs[i]->update(tiles, width, height);
+
+	for (int i = 0; i < orgCount; i++) {
+		orgs[i]->update(tiles, height, width);
 	}
+
+	for (int r = 0; r < height; r++) {
+
+		for (int c = 0; c < width; c++) {
+			Organism* occ = tiles[r][c].occupant;
+			if (occ == nullptr) continue;
+
+			bool alreadyTracked = false;
+
+			for (int k = 0; k < orgCount; k++) {
+
+				if (orgs[k] == occ) {
+					alreadyTracked = true;
+					break;
+				}
+
+			}
+
+			if (!alreadyTracked) {
+
+				if (orgCap == orgCount) {
+					orgCap *= 2;
+					Organism** temp = new Organism * [orgCap];
+					for (int t = 0; t < orgCount; t++) temp[t] = orgs[t];
+					delete[] orgs;
+					orgs = temp;
+
+				}
+
+				orgs[orgCount++] = occ;
+			}
+		}
+	}
+	
 	removeDead();
 	display();
 }
