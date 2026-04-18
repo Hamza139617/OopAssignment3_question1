@@ -85,7 +85,7 @@ void World::runIteration()
 {
 
 	for (int i = 0; i < orgCount; i++) {
-		orgs[i]->update(tiles, height, width);
+		orgs[i]->update(tiles, width, height);
 	}
 
 	for (int r = 0; r < height; r++) {

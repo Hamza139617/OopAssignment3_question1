@@ -1,14 +1,14 @@
 #include "Part2.h"
 #include "part3.h"
-
+#include <cstdlib>
 using namespace std;
 
 int main() {
 	World world(20, 20); //initiating a world grid 20x20
 
 	//adding 2 orgs 
-	world.addNewOrg(new FractalSprawler(2, 2, 3, 3));
-	world.addNewOrg(new KineticHunter(10, 10, 3, 3));
+	world.addNewOrg(new FractalSprawler(4, 2, 1, 7));
+	world.addNewOrg(new KineticHunter(10, 10, 1, 1));
 
 	//running as long as fractals are alive
 	for (int i = 0; world.getFractalCount() > 0; i++)
@@ -16,6 +16,7 @@ int main() {
 		cout << "// ===== Iteration " << i + 1 << " ===== //";
 		cout << endl;
 		world.runIteration();
+		system("cls");
 	}
 	return 0;	
 }

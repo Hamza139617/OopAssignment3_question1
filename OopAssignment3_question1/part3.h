@@ -148,8 +148,8 @@ public:
 		if (startX < 0) startX = 0;
 		if (startY < 0) startY = 0;
 
-		if (endX > worldWidth) endX = worldWidth - 1;
-		if (endY > worldHeight) endY = worldHeight - 1;
+		if (endX > worldWidth) endX = worldWidth;
+		if (endY > worldHeight) endY = worldHeight;
 
 
 		int countTiles = 0;
@@ -215,7 +215,9 @@ public:
 						if (world[i][j].occupant == nullptr && (i + 2 < worldWidth && j + 2 < worldHeight ) ) {
 							
 							FractalSprawler* newConsumer = new FractalSprawler(i, j, 2, 2);
-							world[i][j].occupant = newConsumer;
+							for (int a = i; a < i + 2; ++a)
+								for (int b = j; b < j + 2; ++b)
+									world[a][b].occupant = newConsumer;
 						}
 
 					}
@@ -365,6 +367,7 @@ public:
 
 				if (world[i][j].occupant != nullptr && world[i][j].occupant->getSpecie() == false ) {
 					world[i][j].nutrientLevel--;
+					world[i][j].toxicity += 0.5f;
 					int newX = world[i][j].occupant->getWidth();
 					int newY = world[i][j].occupant->getHeight();
 					newX--;
