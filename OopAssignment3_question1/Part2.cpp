@@ -89,6 +89,23 @@ void World::runIteration()
 	}
 
 	for (int r = 0; r < height; r++) {
+		for (int c = 0; c < width; c++) {
+			if (tiles[r][c].occupant == nullptr) {
+				tiles[r][c].toxicity -= 0.2f;
+			}
+			else if (tiles[r][c].occupant->getSpecie()) {
+				tiles[r][c].toxicity += 0.3f;
+			}
+			else {
+				tiles[r][c].toxicity -= 0.1f;
+			}
+
+			if (tiles[r][c].toxicity < 0.0f) tiles[r][c].toxicity = 0.0f;
+			if (tiles[r][c].toxicity > 100.0f) tiles[r][c].toxicity = 100.0f;
+		}
+	}
+
+	for (int r = 0; r < height; r++) {
 
 		for (int c = 0; c < width; c++) {
 			Organism* occ = tiles[r][c].occupant;
@@ -123,6 +140,17 @@ void World::runIteration()
 	
 	removeDead();
 	display();
+}
+
+World::~World() {
+
+	for (int i = 0; i < height; i++)
+		delete[] tiles[i];
+	delete[] tiles;
+
+	for (int i = 0; i < orgCount; i++)
+		delete orgs[i];
+	delete[] orgs;
 }
 
 void World::display()

@@ -7,8 +7,8 @@ int main() {
 	World world(20, 20); //initiating a world grid 20x20
 
 	//adding 2 orgs 
-	world.addNewOrg(new FractalSprawler(4, 2, 1, 7));
-	world.addNewOrg(new KineticHunter(10, 10, 1, 1));
+	world.addNewOrg(new FractalSprawler(1, 2, 1, 7));
+	world.addNewOrg(new KineticHunter(10, 10,4, 3));
 
 	//running as long as fractals are alive
 	for (int i = 0; world.getFractalCount() > 0; i++)

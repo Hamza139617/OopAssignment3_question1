@@ -166,14 +166,16 @@ public:
 
 		}
 
+		if (countTiles == 0) return;
 		float averageNutrient = sumNutrient / countTiles;
 
-		if (averageNutrient > 70) {
+		if (averageNutrient > 45.0f) {
 
 			for (int i = 0; i < width; i++)
 				delete[] internalShape[i];
 
 			delete[] internalShape;
+			internalShape = nullptr;
 
 			width += 2;
 			height += 2;
@@ -208,6 +210,10 @@ public:
 				// if hit edge the go backward 
 				//
 
+				 bool spawned = false;
+
+
+
 				for (int i = x + width - 1 ; i < worldWidth && i >= 0; ) {
 
 					for (int j = y + height - 1; j < worldHeight && j >= 0; j++ ) {
@@ -218,6 +224,8 @@ public:
 							for (int a = i; a < i + 2; ++a)
 								for (int b = j; b < j + 2; ++b)
 									world[a][b].occupant = newConsumer;
+							spawned = true;
+							break;
 						}
 
 					}
@@ -232,14 +240,12 @@ public:
 						i--;
 					}
 
+					if (spawned) break;
 
 				}
 
 
-				for (int i = 0; i < width; i++)
-					delete[] internalShape[i];
-
-				delete[] internalShape;
+				
 
 				width = 2;
 				height = 2;

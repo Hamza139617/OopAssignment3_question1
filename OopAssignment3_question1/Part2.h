@@ -56,14 +56,6 @@ public:
 	int getW()const { return width; }
 
 	//destructor
-	~World()
-	{
-		for (int i = 0; i < height; i++)
-			delete[] tiles[i];
-		delete[] tiles;
-
-		for (int i = 0; i < orgCount; i++)
-			delete orgs[i];
-		delete[] orgs;
-	}
+	~World();
+	
 };
